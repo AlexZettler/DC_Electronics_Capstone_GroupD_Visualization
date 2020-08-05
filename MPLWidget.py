@@ -8,14 +8,13 @@ import matplotlib.dates as mdates
 
 from collections import deque
 
-from data_handling.data_retrieval import get_rand_data
-from visualization.settings import colors
+from settings import colors
 
+import numpy as np
 
 class MPLWidget(QFrame):
     """
     A widget containing a matplotlib canvas with methods for plotting ad formatting
-
     """
     frame_width = 3
     data_list_box_size = (100, 20)
@@ -54,7 +53,7 @@ class MPLWidget(QFrame):
         self.canvas.multi_plot(data=data)
 
     def plot_multi_test(self):
-        self.canvas.multi_plot(get_rand_data())
+        self.canvas.multi_plot(np.random.random(100))
 
     def time_format_xaxis(self, data):
         # todo: write this as a wrapper method

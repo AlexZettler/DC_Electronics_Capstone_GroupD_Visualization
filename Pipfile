@@ -8,6 +8,7 @@ nose = "*"
 pyqt5 = "*"
 pyqtdatavisualization = "*"
 matplotlib = "*"
+numpy = "*"
 
 [dev-packages]
 

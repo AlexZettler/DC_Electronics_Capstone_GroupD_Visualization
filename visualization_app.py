@@ -1,8 +1,8 @@
 from PyQt5.QtWidgets import QMainWindow
 import PyQt5.QtCore as QtCore
 
-from visualization.settings import colors
-from visualization.widgets import *
+from settings import colors
+from widgets import *
 
 
 class VisApp(QMainWindow):

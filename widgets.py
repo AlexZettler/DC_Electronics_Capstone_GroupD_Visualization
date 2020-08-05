@@ -1,14 +1,19 @@
 from PyQt5.QtWidgets import QPushButton, QTabWidget, QLineEdit, QLabel, QWidget, QFrame, QScrollArea, QVBoxLayout, \
     QHBoxLayout
 
-from visualization.MPLWidget import MPLWidget
-from data_handling.data_retrieval import get_rand_data
-import PyQt5.sip as sip
+from MPLWidget import MPLWidget
+# from data_handling.data_retrieval import get_rand_data
+from PyQt5 import sip
+from PyQt5 import QtDataVisualization
+from PyQt5 import QtGui
+from PyQt5 import QtCore
+from visualization.keyListenerWidget import iKeyListenerWidget
 
 import datetime
+import numpy as np
 
 
-class TabDock(QTabWidget):
+class TabDock(QTabWidget, iKeyListenerWidget):
     """
     The primary widget holding the configure and visualization tabs
     """
@@ -23,7 +28,7 @@ class TabDock(QTabWidget):
         # self.setStyleSheet(f"background-color: {colors['light']}")
 
 
-class ConfigureTab(QWidget):
+class ConfigureTab(iKeyListenerWidget):
     """
     The main configuration tab used to configure aspects of the system
     """
@@ -43,7 +48,7 @@ class ConfigureTab(QWidget):
         label.resize(100, 60)
 
 
-class VisualizeTab(QWidget):
+class VisualizeTab(iKeyListenerWidget):
     """
     A tab for visualizing data over a period of time
     """
@@ -65,7 +70,7 @@ class VisualizeTab(QWidget):
         self.setLayout(self.h_layout)
 
 
-class GraphSetupWidget(QFrame):
+class GraphSetupWidget(QFrame, iKeyListenerWidget):
     """
     A widget for setting up the graphs
     """
@@ -93,8 +98,13 @@ class GraphSetupWidget(QFrame):
         # Apply layout
         self.setLayout(self.b_layout)
 
+    def keyPressEvent(self, event: QtGui.QKeyEvent):
+        print("Key pressed")
+        print(f"Key: {event.key()} pressed")
+        super(iKeyListenerWidget, self).keyPressEvent(event)
 
-class GraphScrollWidget(QScrollArea):
+
+class GraphScrollWidget(QScrollArea, iKeyListenerWidget):
     """
     A widget to enable scroll functionality
     """
@@ -116,7 +126,7 @@ class GraphScrollWidget(QScrollArea):
         return self.graph_list_widget.graphs
 
 
-class GraphListWidget(QWidget):
+class GraphListWidget(iKeyListenerWidget):
     """
     A widget for managing many different graphs
     """
@@ -143,7 +153,7 @@ class GraphListWidget(QWidget):
         self.graphs[current_id] = graph_with_menu
 
         # Plot some dummy data when graph is added
-        graph_with_menu.graph_widget.multi_plot(get_rand_data())
+        graph_with_menu.graph_widget.multi_plot([np.random.random(100)])
 
         # Bind the remove button to a function to remove the graph from the managed graphs and erase it from the canvas
         graph_with_menu.btn_remove_plot.clicked.connect(lambda: self.remove_plot(graph_with_menu))
@@ -178,13 +188,13 @@ class GraphListWidget(QWidget):
         # Iterate through values in the dictionary
         for graph in self.graphs.values():
             # Fill the graphs with dummy data
-            data = get_rand_data()
+            data = [np.random.random(100)]
 
             # Plot all graphs returned in the data variable
             graph.graph_widget.multi_plot(data)
 
 
-class PlotWithCommands(QWidget):
+class PlotWithCommands(iKeyListenerWidget):
     """
     A widget that contains a graph with controls located on the right hand panel.
     These options currently only include a remove button
@@ -218,7 +228,7 @@ class PlotWithCommands(QWidget):
         # Apply layout
         self.setLayout(h_layout)
 
-    def graph_log_files(self)->None:
+    def graph_log_files(self) -> None:
         """
         This method plots a list of log files and data points logged within the last minute
         """
@@ -241,7 +251,7 @@ class PlotWithCommands(QWidget):
         pass
 
 
-class CustomLabel(QLabel):
+class CustomLabel(QLabel, iKeyListenerWidget):
     """
     A dummy label to test drag and drop functionality with
     """

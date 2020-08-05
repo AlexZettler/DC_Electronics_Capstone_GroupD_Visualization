@@ -1,5 +1,5 @@
 from PyQt5 import QtWidgets, QtCore
-from visualization.visualization_app import VisApp
+from visualization_app import VisApp
 
 import sys
 
